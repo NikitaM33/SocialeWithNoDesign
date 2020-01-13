@@ -1,0 +1,11 @@
+.item{
+    color: greenyellow;
+}
+
+.postsDescr{
+    padding: 2em;
+}
+
+.postsDescr button{
+    margin-bottom: 2em;
+}

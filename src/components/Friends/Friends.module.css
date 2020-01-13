@@ -1,0 +1,11 @@
+.friendsWrapper{
+    display: grid;
+    grid-template-areas: 
+    "img"
+    "name";
+    grid-template-columns: 100%;
+    grid-template-rows: 50% 50%;
+    width: 70px;
+    padding: 0.5em;
+    color: #eaeaea;
+}

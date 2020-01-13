@@ -1,0 +1,12 @@
+img{
+    width: 100%;
+    height: auto;
+}
+
+.descrBlock{
+    padding: 2em;
+}
+
+.descrBlock img{
+    width: 20%;
+}

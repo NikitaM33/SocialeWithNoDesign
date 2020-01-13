@@ -1,0 +1,12 @@
+.pagesWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.selectedPage {
+    font-weight: bold;
+}
+
+.pageNumber {
+    border: 1px solid gray;
+}
