@@ -1,7 +1,7 @@
 import React from 'react';
 import Profile from './Profile';
 import { connect } from 'react-redux';
-import { setUserProfile, getStatus, updateStatus } from '../../redux/propfileReduser';
+import { setUserProfile, getStatus, updateStatus, savePhoto, saveProfile } from '../../redux/propfileReduser';
 import { withRouter, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { getProfile,
@@ -11,11 +11,12 @@ import { getProfile,
 
 
 class ProfileContainer extends React.Component {
-    componentDidMount() {
+    refreshProfile() {
         let userId = this.props.match.params.userId;
         
         if(!userId) {
             userId = this.props.authorizedUserId;
+            // userId = 1190;
             if(!userId) {
                 this.props.history.push('/login');
             }
@@ -23,24 +24,27 @@ class ProfileContainer extends React.Component {
 
         this.props.setUserProfile(userId);
         this.props.getStatus(userId);
-        
-        // usersAPI.getUserProfile(userId)
-        // .then(data => {
-        //     this.props.setUserProfile(data);
-        // })
+    }
 
-        // axios.get(`https://social-network.samuraijs.com/api/1.0/profile/` + userId)
-        // .then(response => {
-        //     this.props.setUserProfile(response.data);
-        // });
+    componentDidMount() { // componentDidMount срабатывает когда меняется либо state либо props
+        this.refreshProfile()
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(this.props.match.params.userId != prevProps.match.params.userId){
+            this.refreshProfile()
+        }
     }
 
     render() {
+        // debugger
         return(
             <div>
                 <Profile {...this.props} profile={this.props.profile}
                                         status={this.props.status}
-                                        updateStatus={this.props.updateStatus} />
+                                        updateStatus={this.props.updateStatus}
+                                        isOwner={!this.props.match.params.userId}
+                                        savePhoto={this.props.savePhoto} />
             </div>
         )
     }
@@ -69,7 +73,9 @@ export default compose(
     connect(mapStateToProps, {
         setUserProfile,
         getStatus,
-        updateStatus
+        updateStatus,
+        savePhoto,
+        saveProfile
     }),
     withRouter,
     // withAuthRedirect

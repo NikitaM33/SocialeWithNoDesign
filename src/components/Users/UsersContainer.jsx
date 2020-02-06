@@ -25,7 +25,7 @@ class UsersContainer extends React.Component{
         this.props.getUsers(pageNumber, this.props.pageSize);
     };
 
-    render(){
+    render(){ // 99 39:20
         return(
             <>
                 { this.props.isFetching ? <Preloader /> : null }
@@ -51,7 +51,6 @@ let mapStateToProps = (state) => {
     return {
         // users: takeUsersSuperSelector(state),
         users: takeUsersSelector(state),
-        // users: takeUsers(state),
         pageSize: getPageSize(state),
         totalUsersCount: getTotalUsersCount(state),
         currentPage: getCurrentPage(state),

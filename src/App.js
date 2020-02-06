@@ -11,7 +11,7 @@ import Friends from './components/Friends/Friends';
 import UsersContainer from './components/Users/UsersContainer';
 import Login from './components/Login/Login';
 import GallaryContainer from './components/Gallary/GallaryContainer';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { initializeApp } from './redux/appReduser';
@@ -25,8 +25,17 @@ const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileCo
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 
 class App extends React.Component {
+  catchAllUnhandledErrors = (promiseRejectionEvent) => {
+    alert('Some error accrued');
+  }
+
   componentDidMount() {
     this.props.initializeApp();
+    window.addEventListener('unhandledRejection', this.catchAllUnhandledErrors)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('unhandledRejection', this.catchAllUnhandledErrors)
   }
 
   render() {
@@ -40,33 +49,14 @@ class App extends React.Component {
         <Navbar />
         <div className="app-wrapper-content">
           <Switch>
+            {/* <Route exact path="/" render={withSuspens(ProfileContainer)} /> Можно сделать так, но так будет две одинаковых страницы на разных урлах */} 
+            <Route exact path="/" render={() => {return <Redirect to={"/profile"} />}} />
             <Route path="/profile/:userId?" render={withSuspens(ProfileContainer)} />
             <Route path="/dialogs" render={withSuspens(DialogsContainer)} />
-            <Route path="/music" render={withSuspens(Music)} />
-            <Route path="/news" render={() => {
-              return (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <News />
-                </Suspense>
-              )
-            }} />
-            <Route path="/settings" render={() => {
-              return (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Settings />
-                </Suspense>
-              )
-            }} />
-            <Route path="/friends" render={() => {
-              return (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Friends state={this.props.state.friendsPage} />
-                </Suspense>
-              )
-            }} />
             <Route path="/users" render={() => <UsersContainer />} />
             <Route path="/login" render={() => <Login />} />
-            <Route path="/gallary" render={() => <GallaryContainer />} />
+            <Route path="*" 
+              render={() => <div>404 NOT FOUND</div>} />
           </Switch>
         </div>
       </div>
@@ -83,12 +73,15 @@ let AppContainer = compose(
   connect( mapStateToProps, { initializeApp } )
 )(App);
 
-const SamuraiJSApp = (props) => {
+const SamuraiJSApp = (props) => { // 99 lesson 16:38
   return(
-    <BrowserRouter>
+    // <BrowserRouter basename={process.env.PUBLIC_URL}> 
+    <BrowserRouter> 
+    {/* <HashRouter> */}
       <Provider store={store}>
         <AppContainer />
       </Provider>
+    {/* </HashRouter> */}
     </BrowserRouter>
   )
 }

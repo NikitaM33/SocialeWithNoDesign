@@ -37,6 +37,7 @@ class ProfileStatus extends React.PureComponent{
     }
 
     render() {
+        // debugger
         return(
             <div>
                 {!this.state.editMode &&
